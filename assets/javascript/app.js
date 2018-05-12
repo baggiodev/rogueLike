@@ -31,36 +31,44 @@ game = {
 	},
 	generateMap: ()=>{
 		//TODO: Makes map not hardcoded and random events
+		var randomY = Math.floor(Math.random()*100) + 20;
+		for (var i = 0; i < randomY; i++) {
+			game.map[i] = []
+			var randomX = Math.floor(Math.random()*100) + 20;
+			for (var d = 0; d < randomX; d++) {
+				game.map[i].push("x");
+			}
+		}
+		console.log(game.map);
 		game.player.locationY = Math.floor(Math.random() * Object.keys(game.map).length)
 		game.player.locationX = Math.floor(Math.random() * game.map[game.player.locationY].length)
 		game.map[game.player.locationY][game.player.locationX] = "P"
-		console.log(game.map);
-
+		game.drawMap();
 	},
 	checkOOB: (direction)=>{
 		//TODO: Checks if the user press a location that is out of bounds
 		switch(direction){
 			case 37:
 				//move left switch case
-				if(game.map[game.player.locationY][game.player.locationX-1]){
+				if(game.map[game.player.locationY][game.player.locationX-1]!=undefined){
 					game.movePlayer("left");
 				}
 				break;
 			case 38:
 				//move up
-				if(game.map[game.player.locationY-1]){
+				if(game.map[game.player.locationY-1][game.player.locationX]!=undefined){
 					game.movePlayer("up");
 				}
 				break;
 			case 39:
 				//move right
-				if(game.map[game.player.locationY][game.player.locationX+1]){
+				if(game.map[game.player.locationY][game.player.locationX+1]!=undefined){
 					game.movePlayer("right");
 				}
 				break;
 			case 40:
 				//move down
-				if(game.map[game.player.locationY+1]){
+				if(game.map[game.player.locationY+1][game.player.locationX]!=undefined){
 					game.movePlayer("down");
 				}
 				break;
@@ -129,3 +137,4 @@ $(document).on("keydown",(event)=>{
    	game.checkOOB(event.which);
    }
 });
+game.generateMap();
