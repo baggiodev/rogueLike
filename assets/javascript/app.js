@@ -20,7 +20,7 @@ game = {
 		//sets player location
 		game.player.locationY = Math.floor(Math.random() * Object.keys(game.map).length)
 		game.player.locationX = Math.floor(Math.random() * game.map[game.player.locationY].length)
-		game.map[game.player.locationY][game.player.locationX] = "P"
+		game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 		//TODO: Make events
 		game.drawMap();
 	},
@@ -63,7 +63,7 @@ game = {
 				//	change variable
 				game.player.locationY--
 				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "P"
+				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 				break;
 			case "down":
 				//move player down
@@ -72,7 +72,7 @@ game = {
 				//	change variable
 				game.player.locationY++
 				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "P"
+				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 				break;
 			case "left":
 				//move player left
@@ -81,7 +81,7 @@ game = {
 				//	change variable
 				game.player.locationX--
 				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "P"
+				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 				break;
 			case "right":
 				//move player right
@@ -90,7 +90,7 @@ game = {
 				//	change variable
 				game.player.locationX++
 				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "P"
+				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 				break;
 		}
 		game.drawMap()
@@ -109,9 +109,7 @@ game = {
 			bigDiv.append(floorDiv)
 		}
 		$("#Hello").html(bigDiv);
-		$(document).animate({
-			scrollTop: $("*:contains('P')").offset().top
-		});
+		$("html, body").animate({ scrollTop: $('#player').offset().top-100 });
 	}
 };
 $(document).on("keydown",(event)=>{
