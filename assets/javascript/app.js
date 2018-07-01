@@ -7,31 +7,127 @@ game = {
 		attack: "",
 		canMove: true
 	},
-	map:{},
-	map2:{
+	map:{
 		level: 1,
 		maxHeight: 0,
 		maxWidth: 0,
+		pointY: 0,
+		pointX: 0,
+		pointNum: 0,
+		roomNum: 5,
+		cantMove: 0,
 		map:{}
+	},
+	seedMap: (x,y)=>{
+		if(game.map.pointNum<game.map.roomNum){
+			let random = Math.floor(Math.random()*4)+1
+			console.log(`random: ${random} x: ${x} y: ${y}
+				Point Num: ${game.map.pointNum}
+				 room Num: ${game.map.roomNum}`)
+			switch(random){
+				case 1:
+				try{
+					typeof(game.map.map[y-1][x])
+				}
+				catch(err){
+					game.seedMap(x,y);
+					break;
+				}
+					//north
+					if(game.map.map[y-1][x]!=undefined && game.map.map[y-1][x]!="P" && game.map.map[y-1][x]!="O"){
+						game.map.map[y-1][x] = "O";
+						game.map.pointNum++;
+						y--
+						game.seedMap(x,y);
+					}
+					else{
+						game.seedMap(x,y);
+					}
+					break;
+				case 2:
+					//east
+				try{
+					typeof(game.map.map[y][x+1]);
+				}
+				catch(err){
+					game.seedMap(x,y);
+					break;
+				}
+					if(game.map.map[y][x+1]!=undefined && game.map.map[y][x+1]!="P" && game.map.map[y][x+1]!="O"){
+						game.map.map[y][x+1] = "O";
+						game.map.pointNum++;
+						x++
+						game.seedMap(x,y);
+					}
+					else{
+						game.seedMap(x,y);
+					}
+					break;
+				case 3:
+					//south
+				try{
+					typeof(game.map.map[y+1][x])
+				}
+				catch(err){
+					game.seedMap(x,y);
+					break;
+				}
+					if(game.map.map[y+1][x]!=undefined && game.map.map[y+1][x]!="P" && game.map.map[y+1][x]!="O"){
+						game.map.map[y+1][x] = "O";
+						game.map.pointNum++;
+						y++
+						game.seedMap(x,y);
+					}
+					else{
+						game.seedMap(x,y);
+					}
+					break;
+				case 4:
+					//west
+				try{
+					typeof(game.map.map[y][x-1])
+				}
+				catch(err){
+					game.seedMap(x,y);
+					break;
+				}
+					if(game.map.map[y][x-1]!=undefined && game.map.map[y][x-1]!="P" && game.map.map[y][x-1]!="O"){
+						game.map.map[y][x-1] = "O";
+						game.map.pointNum++;
+						x--
+						game.seedMap(x,y);
+					}
+					else{
+						game.seedMap(x,y);
+					}
+					break;
+			}
+		}
+
 	},
 	generateMap: ()=>{
 		//TODO: MAKE A BETTER MAP
-		game.map2.maxHeight = ((game.map2.level+1)*2)+1
-		console.log(game.map2.maxHeight);
-		game.map2.maxWidth = ((game.map2.level+1)*2)+1
-		console.log(game.map2.maxWidth)
-		for (var i = 0; i < game.map2.maxHeight; i++) {
-			game.map2.map[i] = []
-			for (var d = 0; d < game.map2.maxWidth; d++) {
-				game.map2.map[i].push("x");
+		game.map.maxHeight = ((game.map.level+1)*2)+1
+		console.log(game.map.maxHeight);
+		game.map.maxWidth = ((game.map.level+1)*2)+1
+		console.log(game.map.maxWidth)
+		for (var i = 0; i < game.map.maxHeight; i++) {
+			game.map.map[i] = []
+			for (var d = 0; d < game.map.maxWidth; d++) {
+				game.map.map[i].push("x");
 			}
 		}
-		game.player.locationX = Math.floor((game.map2.maxWidth)/2)
-		game.player.locationY = Math.floor((game.map2.maxHeight)/2)
-		game.map2.map[game.player.locationY][game.player.locationX] = "P"
-		console.log(game.map2.map);
-
-
+		game.player.locationX = Math.floor((game.map.maxWidth)/2)
+		game.player.locationY = Math.floor((game.map.maxHeight)/2)
+		game.map.map[game.player.locationY][game.player.locationX] = "P"
+		game.map.roomNum = game.map.roomNum + game.map.level;
+		game.map.pointX = game.player.locationX;
+		game.map.pointY = game.player.locationY;
+		//check if its the end of the array
+		//check if the point being created will touch more than one point
+		console.log(game.map.map);
+		game.seedMap(game.map.pointX,game.map.pointY);
+		console.log(game.map.map);
 		//Makes map not hardcoded and random events
 		// var randomY = Math.floor(Math.random()*100) + 20;
 		// for (var i = 0; i < randomY; i++) {
