@@ -21,9 +21,10 @@ game = {
 	seedMap: (x,y)=>{
 		if(game.map.pointNum<game.map.roomNum){
 			let random = Math.floor(Math.random()*4)+1
-			console.log(`random: ${random} x: ${x} y: ${y}
-				Point Num: ${game.map.pointNum}
-				 room Num: ${game.map.roomNum}`)
+			console.log(`random: ${random} 
+			x: ${x} y: ${y}
+			Point Num: ${game.map.pointNum}
+			room Num: ${game.map.roomNum}`)
 			switch(random){
 				case 1:
 				try{
@@ -102,6 +103,7 @@ game = {
 					}
 					break;
 			}
+		game.drawMap();
 		}
 
 	},
@@ -149,25 +151,39 @@ game = {
 		switch(direction){
 			case 37:
 				//move left switch case
-				if(game.map[game.player.locationY][game.player.locationX-1]!=undefined){
+				if(game.map.map[game.player.locationY][game.player.locationX-1]!=undefined&& game.map.map[game.player.locationY][game.player.locationX-1]==="O"){
 					game.movePlayer("left");
 				}
 				break;
 			case 38:
 				//move up
-				if(game.map[game.player.locationY-1][game.player.locationX]!=undefined){
+				//need to check for oob on objects
+				try{
+					game.map.map[game.player.locationY-1][game.player.locationX]
+				}
+				catch(err){
+					break;
+				}
+				if(game.map.map[game.player.locationY-1][game.player.locationX]!=undefined&& game.map.map[game.player.locationY-1][game.player.locationX] ==="O"){
 					game.movePlayer("up");
 				}
 				break;
 			case 39:
 				//move right
-				if(game.map[game.player.locationY][game.player.locationX+1]!=undefined){
+				if(game.map.map[game.player.locationY][game.player.locationX+1]!=undefined&& game.map.map[game.player.locationY][game.player.locationX+1]==="O"){
 					game.movePlayer("right");
 				}
 				break;
 			case 40:
 				//move down
-				if(game.map[game.player.locationY+1][game.player.locationX]!=undefined){
+				//need to check for oob on objects
+				try{
+					game.map.map[game.player.locationY+1][game.player.locationX]
+				}
+				catch(err){
+					break;
+				}
+				if(game.map.map[game.player.locationY+1][game.player.locationX]!=undefined&& game.map.map[game.player.locationY+1][game.player.locationX] ==="O"){
 					game.movePlayer("down");
 				}
 				break;
@@ -179,40 +195,38 @@ game = {
 			case "up":
 				//move player up
 				//	clear old place
-				game.map[game.player.locationY][game.player.locationX] = "x"
+				game.map.map[game.player.locationY][game.player.locationX] = "O"
 				//	change variable
 				game.player.locationY--
-				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
-				$("html, body").animate({ scrollTop: $('#player').offset().top-300 });
+				//	change player on the map!
+				game.map.map[game.player.locationY][game.player.locationX] = "P"
 				break;
 			case "down":
 				//move player down
 				//	clear old place
-				game.map[game.player.locationY][game.player.locationX] = "x"
+				game.map.map[game.player.locationY][game.player.locationX] = "O"
 				//	change variable
 				game.player.locationY++
-				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
-				$("html, body").animate({ scrollTop: $('#player').offset().top-300 });
+				//	change player on the map!
+				game.map.map[game.player.locationY][game.player.locationX] = "P"
 				break;
 			case "left":
 				//move player left
 				//	clear old place
-				game.map[game.player.locationY][game.player.locationX] = "x"
+				game.map.map[game.player.locationY][game.player.locationX] = "O"
 				//	change variable
 				game.player.locationX--
-				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
+				//	change player on the map!
+				game.map.map[game.player.locationY][game.player.locationX] = "P"
 				break;
 			case "right":
 				//move player right
 				//	clear old place
-				game.map[game.player.locationY][game.player.locationX] = "x"
+				game.map.map[game.player.locationY][game.player.locationX] = "O"
 				//	change variable
 				game.player.locationX++
-				//	change player on the map
-				game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
+				//	change player on the map!
+				game.map.map[game.player.locationY][game.player.locationX] = "P"
 				break;
 		}
 		game.drawMap()
@@ -260,10 +274,10 @@ game = {
 	drawMap: ()=>{
 		//draw map on page
 		var bigDiv = $("<div>");
-		for (var i = 0; i < Object.keys(game.map).length; i++) {
+		for (var i = 0; i < Object.keys(game.map.map).length; i++) {
 			var floorDiv = $(`<div id=${i}>`)
-			for (var z = 0; z < game.map[i].length; z++) {
-		 		  floorDiv.append(game.map[i][z]);
+			for (var z = 0; z < game.map.map[i].length; z++) {
+		 		  floorDiv.append(game.map.map[i][z]);
 		 	}
 			bigDiv.append(floorDiv)
 		}
@@ -271,10 +285,14 @@ game = {
 	}
 };
 $(document).on("keydown",(event)=>{
-   if(event.which>=37 && event.which<=40 && game.player.canMove){
-   	event.preventDefault();
-   	game.checkOOB(event.which);
-   }
+if(game.player.canMove){
+	if(event.which>=37 && event.which<=40){
+	event.preventDefault();
+	game.checkOOB(event.which);
+	}
+}else{
+
+}
 });
 game.generateMap();
 // $("html, body").animate({ scrollTop: $('#player').offset().top-300 });
