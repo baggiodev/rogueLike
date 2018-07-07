@@ -273,7 +273,7 @@ game = {
 		//TODO: Enemies
 	},
 	drawMap: ()=>{
-	//TODO: draw map with canvas
+		//draws on canvas
 	c.clearRect(0,0,canvas.height,canvas.width);
 	for (var j = 0; j < game.map.maxHeight; j++) {
 		for (var i = 1; i < game.map.maxWidth+1; i++) {
@@ -291,8 +291,8 @@ game = {
 					break;
 			}
 			c.beginPath()
-			c.arc((window.innerWidth)* i/(game.map.maxWidth+1),
-				(window.innerHeight) * j/(game.map.maxHeight)+300,
+			c.arc((canvas.width)* i/(game.map.maxWidth+1),
+				(canvas.height) * j/(game.map.maxHeight)+300,
 				100,
 				Math.PI * 2,
 				false
