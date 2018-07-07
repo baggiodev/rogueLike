@@ -1,3 +1,5 @@
+const canvas = document.getElementById("myCanvas");
+const c = canvas.getContext('2d');
 game = {
 	player: {
 		name: "",
@@ -103,7 +105,6 @@ game = {
 					}
 					break;
 			}
-		game.drawMap();
 		}
 
 	},
@@ -144,7 +145,7 @@ game = {
 		// game.player.locationX = Math.floor(Math.random() * game.map[game.player.locationY].length)
 		// game.map[game.player.locationY][game.player.locationX] = "<span id='player'>P</span>"
 		//TODO: Make events
-		// game.drawMap();
+		game.drawMap();
 	},
 	checkOOB: (direction)=>{
 		//Checks if the user press a location that is out of bounds
@@ -272,27 +273,54 @@ game = {
 		//TODO: Enemies
 	},
 	drawMap: ()=>{
-		//draw map on page
-		var bigDiv = $("<div>");
-		for (var i = 0; i < Object.keys(game.map.map).length; i++) {
-			var floorDiv = $(`<div id=${i}>`)
-			for (var z = 0; z < game.map.map[i].length; z++) {
-		 		  floorDiv.append(game.map.map[i][z]);
-		 	}
-			bigDiv.append(floorDiv)
+	//TODO: draw map with canvas
+	c.clearRect(0,0,canvas.height,canvas.width);
+	for (var j = 0; j < game.map.maxHeight; j++) {
+		for (var i = 1; i < game.map.maxWidth+1; i++) {
+			var whichColor;
+			var whichBlock = game.map.map[j][i-1]
+			switch(whichBlock){
+				case "x":
+					whichColor = "black";
+					break;
+				case "O":
+					whichColor = "blue";
+					break;
+				case "P":
+					whichColor = "green";
+					break;
+			}
+			c.beginPath()
+			c.arc((window.innerWidth)* i/(game.map.maxWidth+1),
+				(window.innerHeight) * j/(game.map.maxHeight)+300,
+				100,
+				Math.PI * 2,
+				false
+				)
+			c.fillStyle = whichColor;
+			c.fill();
 		}
-		$("#Hello").html(bigDiv);
+	}
 	}
 };
 $(document).on("keydown",(event)=>{
-if(game.player.canMove){
-	if(event.which>=37 && event.which<=40){
-	event.preventDefault();
-	game.checkOOB(event.which);
+	if(game.player.canMove){
+		if(event.which>=37 && event.which<=40){
+		event.preventDefault();
+		game.checkOOB(event.which);
+		}
+	}else{
+		//player can't move
 	}
-}else{
-
-}
 });
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+window.addEventListener("resize",function(){
+	canvas.height = window.innerHeight;
+	canvas.width = window.innerWidth;
+	game.drawMap();
+})
+
 game.generateMap();
-// $("html, body").animate({ scrollTop: $('#player').offset().top-300 });
